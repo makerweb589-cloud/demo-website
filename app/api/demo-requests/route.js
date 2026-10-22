@@ -1,4 +1,4 @@
-import { demoRequests } from "@/lib/demo-store";
+import { demoRequests } from "../../../lib/demo-store";
 
 export const dynamic = "force-dynamic";
 
