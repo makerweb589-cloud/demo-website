@@ -1,57 +1,85 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
+
+const navItems = [
+  {
+    label: "Home",
+    href: "/",
+    icon: "home",
+    isActive: (pathname, hash) => pathname === "/",
+  },
+  {
+    label: "Dashboard",
+    href: "/dashboard",
+    icon: "dashboard",
+    isActive: (pathname, hash) =>
+      pathname === "/dashboard" && hash !== "#overview",
+  },
+  {
+    label: "Overview",
+    href: "/dashboard#overview",
+    icon: "overview",
+    isActive: (pathname, hash) =>
+      pathname === "/dashboard" && hash === "#overview",
+  },
+  {
+    label: "About",
+    href: "/about",
+    icon: "about",
+    isActive: (pathname) => pathname === "/about",
+  },
+];
 
 function NavIcon({ name }) {
-  const props = {
+  const commonProps = {
     width: 22,
     height: 22,
     viewBox: "0 0 24 24",
     fill: "none",
     stroke: "currentColor",
-    strokeWidth: 1.7,
+    strokeWidth: 1.8,
     strokeLinecap: "round",
     strokeLinejoin: "round",
-    "aria-hidden": true
+    "aria-hidden": true,
   };
 
   switch (name) {
     case "home":
       return (
-        <svg {...props}>
+        <svg {...commonProps}>
           <path d="m3 10 9-7 9 7" />
-          <path d="M5 9v12h14V9" />
-          <path d="M9 21v-7h6v7" />
+          <path d="M5 9v11h14V9" />
+          <path d="M9 20v-7h6v7" />
         </svg>
       );
 
     case "dashboard":
       return (
-        <svg {...props}>
-          <rect x="3.5" y="3.5" width="7" height="7" rx="1.5" />
-          <rect x="13.5" y="3.5" width="7" height="7" rx="1.5" />
-          <rect x="3.5" y="13.5" width="7" height="7" rx="1.5" />
-          <rect x="13.5" y="13.5" width="7" height="7" rx="1.5" />
+        <svg {...commonProps}>
+          <rect x="3" y="3" width="8" height="8" rx="2" />
+          <rect x="13" y="3" width="8" height="5" rx="2" />
+          <rect x="13" y="10" width="8" height="11" rx="2" />
+          <rect x="3" y="13" width="8" height="8" rx="2" />
         </svg>
       );
 
     case "overview":
       return (
-        <svg {...props}>
-          <path d="M4 19.5h16" />
-          <path d="M6 16V10" />
-          <path d="M12 16V5" />
-          <path d="M18 16v-4" />
+        <svg {...commonProps}>
+          <path d="M3 3v18h18" />
+          <path d="m7 14 4-4 3 3 6-7" />
+          <path d="M15 6h5v5" />
         </svg>
       );
 
     case "about":
       return (
-        <svg {...props}>
+        <svg {...commonProps}>
           <circle cx="12" cy="12" r="9" />
           <path d="M12 11v5" />
-          <path d="M12 8h.01" />
+          <path d="M12 7h.01" />
         </svg>
       );
 
@@ -65,67 +93,43 @@ export default function MobileBottomNav() {
   const [hash, setHash] = useState("");
 
   useEffect(() => {
-    function updateHash() {
+    const updateHash = () => {
       setHash(window.location.hash);
-    }
+    };
 
     updateHash();
 
     window.addEventListener("hashchange", updateHash);
+    window.addEventListener("popstate", updateHash);
 
     return () => {
       window.removeEventListener("hashchange", updateHash);
+      window.removeEventListener("popstate", updateHash);
     };
   }, [pathname]);
 
-  const items = [
-    {
-      label: "Home",
-      href: "/",
-      icon: "home",
-      active: pathname === "/"
-    },
-    {
-      label: "Dashboard",
-      href: "/dashboard",
-      icon: "dashboard",
-      active: pathname === "/dashboard" && hash !== "#overview"
-    },
-    {
-      label: "Overview",
-      href: "/dashboard#overview",
-      icon: "overview",
-      active: pathname === "/dashboard" && hash === "#overview"
-    },
-    {
-      label: "About",
-      href: "/about",
-      icon: "about",
-      active: pathname === "/about"
-    }
-  ];
-
   return (
     <nav className="mobile-bottom-nav" aria-label="Mobile navigation">
-      {items.map((item) => (
-        <a
-          key={item.label}
-          href={item.href}
-          className={`mobile-bottom-nav-item ${
-            item.active ? "active" : ""
-          }`}
-          aria-current={item.active ? "page" : undefined}
-          key={item.label}
-        >
-          <span className="mobile-bottom-nav-icon">
-            <NavIcon name={item.icon} />
-          </span>
+      {navItems.map((item) => {
+        const active = item.isActive(pathname, hash);
 
-          <span className="mobile-bottom-nav-label">
-            {item.label}
-          </span>
-        </a>
-      ))}
+        return (
+          <a
+            key={item.label}
+            href={item.href}
+            className={`mobile-bottom-nav-item${active ? " active" : ""}`}
+            aria-current={active ? "page" : undefined}
+          >
+            <span className="mobile-bottom-nav-icon">
+              <NavIcon name={item.icon} />
+            </span>
+
+            <span className="mobile-bottom-nav-label">
+              {item.label}
+            </span>
+          </a>
+        );
+      })}
     </nav>
   );
 }
