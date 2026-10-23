@@ -3,97 +3,70 @@
 import { useState } from "react";
 import Link from "next/link";
 
-const services = [
-  {
-    number: "01",
-    title: "Business Strategy",
-    description:
-      "Build a clear direction for your business with practical planning and thoughtful solutions.",
-  },
-  {
-    number: "02",
-    title: "Digital Solutions",
-    description:
-      "Create modern digital experiences that help your business work smarter and grow.",
-  },
-  {
-    number: "03",
-    title: "Growth & Support",
-    description:
-      "Discover opportunities, improve your processes and move forward with confidence.",
-  },
-];
-
-function OutlineIcon({ name, size = 22 }) {
+function OutlineIcon({ name, size = 20, className = "" }) {
   const common = {
     width: size,
     height: size,
     viewBox: "0 0 24 24",
     fill: "none",
     stroke: "currentColor",
-    strokeWidth: 1.6,
+    strokeWidth: 1.7,
     strokeLinecap: "round",
     strokeLinejoin: "round",
+    className,
     "aria-hidden": true,
-    focusable: "false",
+    focusable: "false"
   };
 
-  const icons = {
-    strategy: (
-      <>
-        <circle cx="12" cy="12" r="8.5" />
-        <circle cx="12" cy="12" r="4.5" />
-        <circle cx="12" cy="12" r="1" />
-      </>
-    ),
-    digital: (
-      <>
-        <rect x="3" y="4" width="18" height="13" rx="2.5" />
-        <path d="M8 21h8M12 17v4M7 8h4M7 11h7" />
-      </>
-    ),
-    growth: (
-      <>
-        <path d="M3 17l6-6 4 3 8-8" />
-        <path d="M15 6h6v6" />
-      </>
-    ),
-    arrow: (
-      <>
-        <path d="M7 17 17 7" />
-        <path d="M8 7h9v9" />
-      </>
-    ),
-    sparkle: (
-      <>
-        <path d="M12 3l1.9 5.8L20 11l-6.1 2.2L12 19l-1.9-5.8L4 11l6.1-2.2L12 3Z" />
-        <path d="m19 15 1 2.5 2 1-2 1-1 2.5-1-2.5-2-1 2-1 1-2.5Z" />
-      </>
-    ),
-    check: <path d="m5 12 4 4L19 6" />,
+  const paths = {
+    arrow: <><path d="M7 17 17 7" /><path d="M8 7h9v9" /></>,
+    sparkle: <><path d="m12 3 1.9 5.8L20 11l-6.1 2.2L12 19l-1.9-5.8L4 11l6.1-2.2L12 3Z" /><path d="m19 15 .8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8L19 15Z" /></>,
+    compass: <><circle cx="12" cy="12" r="9" /><path d="m15.8 8.2-2.4 5.2-5.2 2.4 2.4-5.2 5.2-2.4Z" /></>,
+    layers: <><path d="m12 3 9 5-9 5-9-5 9-5Z" /><path d="m3 12 9 5 9-5" /><path d="m3 16 9 5 9-5" /></>,
+    chart: <><path d="M4 19V5" /><path d="M4 19h16" /><path d="m7 15 4-4 3 2 5-6" /></>,
+    check: <><path d="m5 12 4 4L19 6" /></>
   };
 
-  return <svg {...common}>{icons[name] || icons.sparkle}</svg>;
+  return <svg {...common}>{paths[name] || paths.sparkle}</svg>;
 }
+
+const services = [
+  {
+    number: "01",
+    title: "Business Strategy",
+    description:
+      "Build a clear direction for your business with practical planning and thoughtful solutions."
+  },
+  {
+    number: "02",
+    title: "Digital Solutions",
+    description:
+      "Create modern digital experiences that help your business work smarter and grow."
+  },
+  {
+    number: "03",
+    title: "Growth & Support",
+    description:
+      "Discover opportunities, improve your processes and move forward with confidence."
+  }
+];
 
 export default function HomePage() {
   const [form, setForm] = useState({
     name: "",
     email: "",
     company: "",
-    message: "",
+    message: ""
   });
 
   const [loading, setLoading] = useState(false);
   const [notice, setNotice] = useState(null);
 
   function handleChange(event) {
-    const { name, value } = event.target;
-
-    setForm((previous) => ({
-      ...previous,
-      [name]: value,
-    }));
+    setForm({
+      ...form,
+      [event.target.name]: event.target.value
+    });
   }
 
   async function handleSubmit(event) {
@@ -108,9 +81,9 @@ export default function HomePage() {
       const response = await fetch("/api/demo-requests", {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
+          "Content-Type": "application/json"
         },
-        body: JSON.stringify(form),
+        body: JSON.stringify(form)
       });
 
       const data = await response.json();
@@ -121,19 +94,19 @@ export default function HomePage() {
 
       setNotice({
         type: "success",
-        text: "Thank you! Your demo request has been submitted.",
+        text: "Thank you! Your demo request has been submitted."
       });
 
       setForm({
         name: "",
         email: "",
         company: "",
-        message: "",
+        message: ""
       });
     } catch (error) {
       setNotice({
         type: "error",
-        text: error.message || "Please try again.",
+        text: error.message || "Please try again."
       });
     } finally {
       setLoading(false);
@@ -163,7 +136,6 @@ export default function HomePage() {
       </header>
 
       <main>
-        {/* HERO */}
         <section className="hero container">
           <div className="hero-content">
             <div className="eyebrow">
@@ -188,7 +160,7 @@ export default function HomePage() {
               </a>
 
               <a href="#services" className="text-link">
-                Explore our services
+                Explore our services <OutlineIcon name="arrow" size={16} />
               </a>
             </div>
 
@@ -210,7 +182,7 @@ export default function HomePage() {
           <div className="hero-visual">
             <div className="visual-top">
               <span>THE BIG PICTURE</span>
-              <span>2026</span>
+              <span>2026 ↗</span>
             </div>
 
             <div className="visual-graphic">
@@ -241,14 +213,11 @@ export default function HomePage() {
                 <p>Simple thinking. Meaningful outcomes.</p>
               </div>
 
-              <span className="visual-arrow">
-                <OutlineIcon name="arrow" size={21} />
-              </span>
+              <span className="visual-arrow" aria-hidden="true"><OutlineIcon name="arrow" size={18} /></span>
             </div>
           </div>
         </section>
 
-        {/* TRUST STRIP */}
         <section className="trust-strip">
           <div className="container trust-inner">
             <p>MADE FOR AMBITIOUS BUSINESSES</p>
@@ -262,7 +231,6 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* SERVICES */}
         <section className="section container" id="services">
           <div className="section-heading">
             <div>
@@ -282,23 +250,11 @@ export default function HomePage() {
           </div>
 
           <div className="service-grid">
-            {services.map((service, index) => (
+            {services.map((service) => (
               <article className="service-card" key={service.number}>
                 <div className="service-card-top">
                   <span>{service.number}</span>
-
-                  <span className="service-arrow">
-                    <OutlineIcon
-                      name={
-                        index === 0
-                          ? "strategy"
-                          : index === 1
-                            ? "digital"
-                            : "growth"
-                      }
-                      size={23}
-                    />
-                  </span>
+                  <span className="service-arrow" aria-hidden="true"><OutlineIcon name={service.number === "01" ? "compass" : service.number === "02" ? "layers" : "chart"} size={20} /></span>
                 </div>
 
                 <h3>{service.title}</h3>
@@ -306,14 +262,13 @@ export default function HomePage() {
                 <p>{service.description}</p>
 
                 <a href="#demo" className="service-link">
-                  Learn more
+                  Learn more <OutlineIcon name="arrow" size={16} />
                 </a>
               </article>
             ))}
           </div>
         </section>
 
-        {/* PROCESS */}
         <section className="process-section" id="process">
           <div className="container process-inner">
             <div className="process-heading">
@@ -368,7 +323,6 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* DEMO FORM */}
         <section className="demo-section container" id="demo">
           <div className="demo-copy">
             <span className="section-label">LET&apos;S CONNECT</span>
@@ -385,9 +339,7 @@ export default function HomePage() {
             </p>
 
             <div className="demo-contact-note">
-              <span className="contact-icon">
-                <OutlineIcon name="sparkle" size={23} />
-              </span>
+              <span className="contact-icon" aria-hidden="true"><OutlineIcon name="sparkle" size={22} /></span>
 
               <div>
                 <strong>A conversation, not a commitment.</strong>
@@ -466,7 +418,6 @@ export default function HomePage() {
               <div
                 className={`form-notice ${notice.type}`}
                 role="status"
-                aria-live="polite"
               >
                 {notice.text}
               </div>
@@ -479,7 +430,6 @@ export default function HomePage() {
         </section>
       </main>
 
-      {/* FOOTER */}
       <footer className="site-footer">
         <div className="container">
           <div className="footer-main">
@@ -513,10 +463,7 @@ export default function HomePage() {
             <span>© 2026 Nexa. Demo concept.</span>
 
             <span>
-              Made with clarity{" "}
-              <span className="footer-star">
-                <OutlineIcon name="sparkle" size={15} />
-              </span>
+              Made with clarity <span className="footer-star" aria-hidden="true"><OutlineIcon name="sparkle" size={15} /></span>
             </span>
           </div>
         </div>
