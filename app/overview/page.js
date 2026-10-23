@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
+import { readApiResponse } from "../../lib/read-api-response";
 
 function statusOf(item) {
   const value = String(item?.status || item?.state || "pending").toLowerCase();
@@ -18,7 +19,7 @@ export default function OverviewPage() {
     setError("");
     try {
       const response = await fetch("/api/demo-requests", { cache: "no-store" });
-      const data = await response.json();
+      const data = await readApiResponse(response, "Could not read the latest overview from the server.");
       if (!response.ok || data?.success === false) throw new Error(data?.message || "Could not load the latest overview.");
       const list = Array.isArray(data) ? data : (data.requests || data.data || data.items || []);
       setRequests(Array.isArray(list) ? list : []);
@@ -40,7 +41,7 @@ export default function OverviewPage() {
   return (
     <main className="nexa-page nexa-overview-page">
       <section className="nexa-page-hero overview-hero">
-        <div className="nexa-page-hero-copy"><span className="section-label">NEXA / OVERVIEW</span><p className="nexa-kicker"><span className="status-dot" /> YOUR WORKSPACE, AT A GLANCE</p><h1>Clarity for the <span>next step.</span></h1><p>See the latest demo enquiries and a quick snapshot of what is happening across your Nexa workspace.</p><div className="nexa-page-actions"><Link href="/dashboard" className="button button-dark">Open dashboard <span aria-hidden="true">↗</span></Link><button className="button overview-refresh" type="button" onClick={loadOverview} disabled={loading}>{loading ? "Refreshing…" : "Refresh overview ↻"}</button></div></div>
+        <div className="nexa-page-hero-copy"><span className="section-label">NEXA / OVERVIEW</span><p className="nexa-kicker"><span className="status-dot" /> YOUR NEXT CHAPTER STARTS HERE</p><h1>Clarity for the <span>next step.</span></h1><p>See the latest demo enquiries and a quick snapshot of what is happening across your Nexa workspace.</p><div className="nexa-page-actions"><Link href="/dashboard" className="button button-dark">Open dashboard <span aria-hidden="true">↗</span></Link><button className="button overview-refresh" type="button" onClick={loadOverview} disabled={loading}>{loading ? "Refreshing…" : "Refresh overview ↻"}</button></div></div>
         <div className="overview-hero-art" aria-hidden="true"><div className="overview-art-ring ring-one" /><div className="overview-art-ring ring-two" /><div className="overview-art-core">N<span>✳</span></div><div className="overview-art-note note-top">Simple insights</div><div className="overview-art-note note-bottom">Made for momentum</div></div>
       </section>
 
