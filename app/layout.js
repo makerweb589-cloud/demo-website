@@ -1,18 +1,16 @@
-
 import "./globals.css";
 import MobileBottomNav from "../components/MobileBottomNav";
 
 export const metadata = {
-  title: "Nexa — Business Solutions",
-  description:
-    "A modern business demo website with services, demo requests and dashboard.",
+  title: "Nexa",
+  description: "Thoughtful strategies and modern digital solutions for business growth.",
 };
 
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body>
-        {children}
+        <div className="app-shell">{children}</div>
         <MobileBottomNav />
       </body>
     </html>
