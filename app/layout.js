@@ -1,6 +1,7 @@
 import "./globals.css";
 import MobileBottomNav from "../components/MobileBottomNav";
 import AppProviders from "../components/AppProviders";
+import EdgeGlowEffect from "../components/EdgeGlowEffect";
 
 const webLogo = process.env.WEB_LOGO || "";
 
@@ -16,6 +17,7 @@ export default function RootLayout({ children }) {
       <body>
         <AppProviders logoUrl={webLogo}>
           <div className="app-shell">{children}</div>
+          <EdgeGlowEffect />
           <MobileBottomNav />
         </AppProviders>
       </body>
