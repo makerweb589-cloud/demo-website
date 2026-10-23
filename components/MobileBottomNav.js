@@ -17,7 +17,7 @@ const items = [
   },
   {
     label: "Overview",
-    href: "/dashboard#overview",
+    href: "/overview",
     icon: <><path d="M4 19V5" /><path d="M4 19h16" /><path d="m7 15 4-4 3 2 5-6" /></>,
   },
   {
@@ -28,35 +28,26 @@ const items = [
 ];
 
 function NavIcon({ children }) {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      {children}
-    </svg>
-  );
+  return <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{children}</svg>;
 }
 
 export default function MobileBottomNav() {
   const pathname = usePathname();
   const router = useRouter();
-  const [hash, setHash] = useState("");
   const [desktopExpanded, setDesktopExpanded] = useState(true);
-  const [dragIndex, setDragIndex] = useState(null);
-  const [isDragging, setIsDragging] = useState(false);
-  const navRef = useRef(null);
+  const [mobileDragIndex, setMobileDragIndex] = useState(null);
+  const [desktopDragIndex, setDesktopDragIndex] = useState(null);
+  const [mobileDragging, setMobileDragging] = useState(false);
+  const [desktopDragging, setDesktopDragging] = useState(false);
+  const mobileNavRef = useRef(null);
+  const desktopNavRef = useRef(null);
   const pressTimer = useRef(null);
-  const dragStarted = useRef(false);
   const startPoint = useRef(null);
-
-  useEffect(() => {
-    const syncHash = () => setHash(window.location.hash);
-    syncHash();
-    window.addEventListener("hashchange", syncHash);
-    window.addEventListener("popstate", syncHash);
-    return () => {
-      window.removeEventListener("hashchange", syncHash);
-      window.removeEventListener("popstate", syncHash);
-    };
-  }, [pathname]);
+  const dragStarted = useRef(false);
+  const suppressClick = useRef(false);
+  const mobileDragIndexRef = useRef(null);
+  const desktopDragIndexRef = useRef(null);
+  const activeIndex = Math.max(0, items.findIndex((item) => item.href === pathname));
 
   useEffect(() => {
     try {
@@ -68,151 +59,193 @@ export default function MobileBottomNav() {
   useEffect(() => {
     document.body.classList.toggle("desktop-nav-expanded", desktopExpanded);
     document.body.classList.toggle("desktop-nav-collapsed", !desktopExpanded);
-    try {
-      window.localStorage.setItem("nexa-desktop-nav-expanded", String(desktopExpanded));
-    } catch (_) {}
-    return () => {
-      document.body.classList.remove("desktop-nav-expanded", "desktop-nav-collapsed");
-    };
+    try { window.localStorage.setItem("nexa-desktop-nav-expanded", String(desktopExpanded)); } catch (_) {}
+    return () => document.body.classList.remove("desktop-nav-expanded", "desktop-nav-collapsed");
   }, [desktopExpanded]);
 
-  const active = useCallback((item) => {
-    if (item.label === "Home") return pathname === "/" && hash !== "#about";
-    if (item.label === "Dashboard") return pathname === "/dashboard" && hash !== "#overview";
-    if (item.label === "Overview") return pathname === "/dashboard" && hash === "#overview";
-    if (item.label === "About") return pathname === "/about" || (pathname === "/" && hash === "#about");
-    return false;
-  }, [pathname, hash]);
+  useEffect(() => {
+    setMobileDragIndex(null);
+    setDesktopDragIndex(null);
+    mobileDragIndexRef.current = null;
+    desktopDragIndexRef.current = null;
+  }, [pathname]);
 
-  const activeIndex = Math.max(0, items.findIndex(active));
-  const indicatorIndex = dragIndex === null ? activeIndex : dragIndex;
-
-  const cancelPressTimer = () => {
-    if (pressTimer.current) {
-      clearTimeout(pressTimer.current);
-      pressTimer.current = null;
-    }
+  const cancelTimer = () => {
+    if (pressTimer.current) clearTimeout(pressTimer.current);
+    pressTimer.current = null;
   };
 
-  const indexFromPointer = (clientX) => {
-    const element = navRef.current;
+  const mobileIndexAt = (clientX) => {
+    const element = mobileNavRef.current;
     if (!element) return activeIndex;
     const rect = element.getBoundingClientRect();
-    const usableX = Math.max(0, Math.min(rect.width - 1, clientX - rect.left));
-    return Math.max(0, Math.min(items.length - 1, Math.floor((usableX / rect.width) * items.length)));
+    const x = Math.max(0, Math.min(rect.width - 1, clientX - rect.left));
+    return Math.max(0, Math.min(items.length - 1, Math.floor((x / rect.width) * items.length)));
   };
 
-  const startPress = (event) => {
+  const desktopIndexAt = (clientY) => {
+    const element = desktopNavRef.current;
+    if (!element) return activeIndex;
+    const links = [...element.querySelectorAll(".desktop-nav-item")];
+    if (!links.length) return activeIndex;
+    let nearest = 0;
+    let nearestDistance = Infinity;
+    links.forEach((link, index) => {
+      const rect = link.getBoundingClientRect();
+      const distance = Math.abs(clientY - (rect.top + rect.height / 2));
+      if (distance < nearestDistance) { nearest = index; nearestDistance = distance; }
+    });
+    return nearest;
+  };
+
+  const beginPress = (event, surface) => {
     if (event.pointerType === "mouse" && event.button !== 0) return;
-    startPoint.current = { x: event.clientX, y: event.clientY };
+    startPoint.current = { x: event.clientX, y: event.clientY, surface };
     dragStarted.current = false;
-    cancelPressTimer();
+    suppressClick.current = false;
+    cancelTimer();
+    try { event.currentTarget.setPointerCapture(event.pointerId); } catch (_) {}
     pressTimer.current = setTimeout(() => {
       dragStarted.current = true;
-      setIsDragging(true);
-      setDragIndex(indexFromPointer(startPoint.current?.x ?? event.clientX));
-      if (navigator.vibrate) navigator.vibrate(12);
+      suppressClick.current = true;
+      if (surface === "mobile") {
+        const index = mobileIndexAt(startPoint.current?.x ?? event.clientX);
+        mobileDragIndexRef.current = index;
+        setMobileDragIndex(index);
+        setMobileDragging(true);
+      } else {
+        const index = desktopIndexAt(startPoint.current?.y ?? event.clientY);
+        desktopDragIndexRef.current = index;
+        setDesktopDragIndex(index);
+        setDesktopDragging(true);
+      }
+      if (typeof navigator !== "undefined" && navigator.vibrate) navigator.vibrate(10);
     }, 220);
   };
 
-  const movePress = (event) => {
-    if (!startPoint.current) return;
-    const distance = Math.hypot(event.clientX - startPoint.current.x, event.clientY - startPoint.current.y);
+  const movePress = (event, surface) => {
+    if (!startPoint.current || startPoint.current.surface !== surface) return;
+    const dx = event.clientX - startPoint.current.x;
+    const dy = event.clientY - startPoint.current.y;
+    const distance = Math.hypot(dx, dy);
+    const intentional = surface === "mobile"
+      ? Math.abs(dx) > Math.abs(dy) * 1.15
+      : Math.abs(dy) > Math.abs(dx) * 1.05;
     if (!dragStarted.current && distance > 9) {
-      cancelPressTimer();
-      // A deliberate horizontal swipe can begin a selection drag without waiting for a long press.
-      if (Math.abs(event.clientX - startPoint.current.x) > Math.abs(event.clientY - startPoint.current.y) * 1.2) {
+      cancelTimer();
+      if (intentional) {
         dragStarted.current = true;
-        setIsDragging(true);
+        suppressClick.current = true;
+        if (surface === "mobile") setMobileDragging(true);
+        else setDesktopDragging(true);
       }
     }
     if (dragStarted.current) {
-      setDragIndex(indexFromPointer(event.clientX));
+      if (surface === "mobile") {
+        const index = mobileIndexAt(event.clientX);
+        mobileDragIndexRef.current = index;
+        setMobileDragIndex(index);
+      } else {
+        const index = desktopIndexAt(event.clientY);
+        desktopDragIndexRef.current = index;
+        setDesktopDragIndex(index);
+      }
       if (event.cancelable) event.preventDefault();
     }
   };
 
-  const endPress = () => {
-    cancelPressTimer();
-    if (dragStarted.current && dragIndex !== null) {
-      const target = items[dragIndex];
+  const endPress = (surface) => {
+    cancelTimer();
+    const wasDragging = dragStarted.current;
+    if (wasDragging) {
+      const index = surface === "mobile" ? mobileDragIndexRef.current : desktopDragIndexRef.current;
+      const targetIndex = index ?? activeIndex;
+      const target = items[targetIndex];
+      // Keep the glass indicator at the dropped position until the new route is active.
+      if (surface === "mobile") setMobileDragIndex(targetIndex);
+      else setDesktopDragIndex(targetIndex);
       if (target) router.push(target.href);
+    } else {
+      setMobileDragIndex(null);
+      setDesktopDragIndex(null);
     }
     startPoint.current = null;
     dragStarted.current = false;
-    setIsDragging(false);
-    setDragIndex(null);
+    mobileDragIndexRef.current = null;
+    desktopDragIndexRef.current = null;
+    setMobileDragging(false);
+    setDesktopDragging(false);
+    // Keep the flag until the synthetic click from the pointer release has been suppressed.
+    window.setTimeout(() => { suppressClick.current = false; }, 0);
+  };
+
+  const handleLinkClick = (event) => {
+    if (suppressClick.current) {
+      event.preventDefault();
+      event.stopPropagation();
+      suppressClick.current = false;
+    }
   };
 
   const toggleDesktop = () => setDesktopExpanded((current) => !current);
+  const desktopIndicatorIndex = desktopDragIndex === null ? activeIndex : desktopDragIndex;
+  const mobileIndicatorIndex = mobileDragIndex === null ? activeIndex : mobileDragIndex;
 
   return (
     <>
       <aside className={`desktop-nav-drawer${desktopExpanded ? " is-expanded" : " is-collapsed"}`} aria-label="Desktop navigation">
         <div className="desktop-nav-brand-row">
           <Link href="/" className="desktop-nav-brand" aria-label="Nexa home">
-            <span className="desktop-nav-brand-mark">N</span>
-            <span className="desktop-nav-brand-name">Nexa</span>
+            <span className="desktop-nav-brand-mark">N</span><span className="desktop-nav-brand-name">Nexa</span>
           </Link>
-          <button
-            className="desktop-nav-toggle"
-            type="button"
-            onClick={toggleDesktop}
-            aria-label={desktopExpanded ? "Collapse navigation" : "Expand navigation"}
-            title={desktopExpanded ? "Collapse navigation" : "Expand navigation"}
-          >
-            <NavIcon>
-              {desktopExpanded ? <path d="m14.5 5-7 7 7 7" /> : <path d="m9.5 5 7 7-7 7" />}
-            </NavIcon>
+          <button className="desktop-nav-toggle" type="button" onClick={toggleDesktop} aria-label={desktopExpanded ? "Collapse navigation" : "Expand navigation"} title={desktopExpanded ? "Collapse navigation" : "Expand navigation"}>
+            <NavIcon>{desktopExpanded ? <path d="m14.5 5-7 7 7 7" /> : <path d="m9.5 5 7 7-7 7" />}</NavIcon>
           </button>
         </div>
-
         <div className="desktop-nav-caption">NAVIGATION</div>
-        <nav className="desktop-nav-list" aria-label="Main navigation">
-          {items.map((item) => {
-            const selected = active(item);
-            return (
-              <Link
-                key={item.label}
-                href={item.href}
-                className={`desktop-nav-item${selected ? " is-active" : ""}`}
-                aria-current={selected ? "page" : undefined}
-                title={!desktopExpanded ? item.label : undefined}
-              >
-                <span className="desktop-nav-item-icon"><NavIcon>{item.icon}</NavIcon></span>
-                <span className="desktop-nav-item-label">{item.label}</span>
-                {selected && <span className="desktop-nav-active-dot" aria-hidden="true" />}
-              </Link>
-            );
+        <nav
+          className={`desktop-nav-list${desktopDragging ? " is-dragging" : ""}`}
+          aria-label="Main navigation"
+          ref={desktopNavRef}
+          style={{ "--desktop-active-index": desktopIndicatorIndex }}
+          onPointerDown={(event) => beginPress(event, "desktop")}
+          onPointerMove={(event) => movePress(event, "desktop")}
+          onPointerUp={() => endPress("desktop")}
+          onPointerCancel={() => endPress("desktop")}
+          onClickCapture={handleLinkClick}
+        >
+          <span className="desktop-nav-indicator" aria-hidden="true" />
+          {items.map((item, index) => {
+            const selected = item.href === pathname;
+            const indicatorTarget = index === desktopIndicatorIndex;
+            return <Link key={item.label} href={item.href} className={`desktop-nav-item${selected ? " is-active" : ""}${indicatorTarget ? " is-indicator-target" : ""}`} aria-current={selected ? "page" : undefined} title={!desktopExpanded ? item.label : undefined} onClick={handleLinkClick}>
+              <span className="desktop-nav-item-icon"><NavIcon>{item.icon}</NavIcon></span>
+              <span className="desktop-nav-item-label">{item.label}</span>
+              {selected && <span className="desktop-nav-active-dot" aria-hidden="true" />}
+            </Link>;
           })}
         </nav>
-        <div className="desktop-nav-footer">
-          <span className="desktop-nav-footer-dot" />
-          <span className="desktop-nav-footer-text">Your ideas, made clear.</span>
-        </div>
+        <div className="desktop-nav-footer"><span className="desktop-nav-footer-dot" /><span className="desktop-nav-footer-text">Your ideas, made clear.</span></div>
       </aside>
 
       <nav className="mobile-bottom-nav" aria-label="Mobile navigation">
-        <div className={`mobile-bottom-nav__inner${isDragging ? " is-dragging" : ""}`} ref={navRef} style={{ "--active-index": indicatorIndex }} onPointerDown={startPress} onPointerMove={movePress} onPointerUp={endPress} onPointerCancel={endPress}>
+        <div
+          className={`mobile-bottom-nav__inner${mobileDragging ? " is-dragging" : ""}`}
+          ref={mobileNavRef}
+          style={{ "--active-index": mobileIndicatorIndex }}
+          onPointerDown={(event) => beginPress(event, "mobile")}
+          onPointerMove={(event) => movePress(event, "mobile")}
+          onPointerUp={() => endPress("mobile")}
+          onPointerCancel={() => endPress("mobile")}
+          onClickCapture={handleLinkClick}
+        >
           <span className="mobile-bottom-nav__indicator" aria-hidden="true" />
-          {items.map((item, index) => {
-            const selected = active(item);
-            return (
-              <Link
-                key={item.label}
-                href={item.href}
-                draggable="false"
-                className={`mobile-bottom-nav__item${selected ? " is-active" : ""}${indicatorIndex === index ? " is-indicator-target" : ""}`}
-                aria-current={selected ? "page" : undefined}
-                onClick={(event) => {
-                  if (isDragging || dragStarted.current) event.preventDefault();
-                  setHash(item.href.includes("#") ? `#${item.href.split("#")[1]}` : "");
-                }}
-              >
-                <span className="mobile-bottom-nav__icon"><NavIcon>{item.icon}</NavIcon></span>
-                <span className="mobile-bottom-nav__label">{item.label}</span>
-              </Link>
-            );
+          {items.map((item) => {
+            const selected = item.href === pathname;
+            return <Link key={item.label} href={item.href} draggable="false" className={`mobile-bottom-nav__item${selected ? " is-active" : ""}${mobileIndicatorIndex === items.indexOf(item) ? " is-indicator-target" : ""}`} aria-current={selected ? "page" : undefined} onClick={handleLinkClick}>
+              <span className="mobile-bottom-nav__icon"><NavIcon>{item.icon}</NavIcon></span>
+              <span className="mobile-bottom-nav__label">{item.label}</span>
+            </Link>;
           })}
         </div>
       </nav>
