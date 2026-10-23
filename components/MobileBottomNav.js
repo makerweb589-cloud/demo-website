@@ -6,30 +6,15 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import BrandLogo from "./BrandLogo";
 
 const items = [
-  {
-    label: "Home",
-    href: "/",
-    icon: <><path d="m3 10 9-7 9 7" /><path d="M5 9v11h14V9" /><path d="M9 20v-7h6v7" /></>,
-  },
-  {
-    label: "Dashboard",
-    href: "/dashboard",
-    icon: <><rect x="3" y="3" width="8" height="8" rx="2" /><rect x="13" y="3" width="8" height="5" rx="2" /><rect x="13" y="10" width="8" height="11" rx="2" /><rect x="3" y="13" width="8" height="8" rx="2" /></>,
-  },
-  {
-    label: "Overview",
-    href: "/overview",
-    icon: <><path d="M4 19V5" /><path d="M4 19h16" /><path d="m7 15 4-4 3 2 5-6" /></>,
-  },
-  {
-    label: "About",
-    href: "/about",
-    icon: <><circle cx="12" cy="12" r="9" /><path d="M12 11v5" /><path d="M12 8h.01" /></>,
-  },
+  { label: "Home", href: "/", icon: <><path d="m3 10 9-7 9 7"/><path d="M5 9.5V20h14V9.5"/><path d="M9 20v-6h6v6"/></> },
+  { label: "Search", href: "/search", icon: <><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 4.5 4.5"/></> },
+  { label: "Explore", href: "/explore", icon: <><circle cx="12" cy="12" r="9"/><path d="m15.8 8.2-2.5 5.1-5.1 2.5 2.5-5.1 5.1-2.5Z"/></> },
+  { label: "Trending", href: "/trending", icon: <><path d="M12.2 21c4 0 6.8-2.8 6.8-6.6 0-2.5-1.3-4.5-3.8-6.7.1 2.2-.7 3.2-1.8 3.8C13.5 7.4 11 4.8 8 3c.7 4.4-3 6.6-3 11.2C5 18.3 8 21 12.2 21Z"/><path d="M12 21c-1.8-.8-2.7-2.1-2.7-3.8 0-1.4.8-2.5 2.2-3.6.1 1.3.6 2 1.5 2.5.8 1.9.4 3.6-1 4.9Z"/></> },
+  { label: "About", href: "/about", icon: <><circle cx="12" cy="12" r="9"/><path d="M12 11v5"/><path d="M12 7.8h.01"/></> },
 ];
 
 function NavIcon({ children }) {
-  return <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{children}</svg>;
+  return <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.65" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{children}</svg>;
 }
 
 export default function MobileBottomNav() {
