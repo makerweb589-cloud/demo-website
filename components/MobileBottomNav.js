@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
+import BrandLogo from "./BrandLogo";
 
 const items = [
   {
@@ -100,11 +101,11 @@ export default function MobileBottomNav() {
 
   const beginPress = (event, surface) => {
     if (event.pointerType === "mouse" && event.button !== 0) return;
-    startPoint.current = { x: event.clientX, y: event.clientY, surface };
+    startPoint.current = { x: event.clientX, y: event.clientY, surface, pointerId: event.pointerId };
     dragStarted.current = false;
     suppressClick.current = false;
     cancelTimer();
-    try { event.currentTarget.setPointerCapture(event.pointerId); } catch (_) {}
+    if (surface === "mobile") { try { event.currentTarget.setPointerCapture(event.pointerId); } catch (_) {} }
     pressTimer.current = setTimeout(() => {
       dragStarted.current = true;
       suppressClick.current = true;
@@ -131,11 +132,12 @@ export default function MobileBottomNav() {
     const intentional = surface === "mobile"
       ? Math.abs(dx) > Math.abs(dy) * 1.15
       : Math.abs(dy) > Math.abs(dx) * 1.05;
-    if (!dragStarted.current && distance > 9) {
+    if (!dragStarted.current && distance > 15) {
       cancelTimer();
       if (intentional) {
         dragStarted.current = true;
         suppressClick.current = true;
+        try { event.currentTarget.setPointerCapture(event.pointerId); } catch (_) {}
         if (surface === "mobile") setMobileDragging(true);
         else setDesktopDragging(true);
       }
@@ -196,7 +198,7 @@ export default function MobileBottomNav() {
       <aside className={`desktop-nav-drawer${desktopExpanded ? " is-expanded" : " is-collapsed"}`} aria-label="Desktop navigation">
         <div className="desktop-nav-brand-row">
           <Link href="/" className="desktop-nav-brand" aria-label="Nexa home">
-            <span className="desktop-nav-brand-mark">N</span><span className="desktop-nav-brand-name">Nexa</span>
+            <BrandLogo className="desktop-nav-brand-mark" /><span className="desktop-nav-brand-name">Nexa</span>
           </Link>
           <button className="desktop-nav-toggle" type="button" onClick={toggleDesktop} aria-label={desktopExpanded ? "Collapse navigation" : "Expand navigation"} title={desktopExpanded ? "Collapse navigation" : "Expand navigation"}>
             <NavIcon>{desktopExpanded ? <path d="m14.5 5-7 7 7 7" /> : <path d="m9.5 5 7 7-7 7" />}</NavIcon>
@@ -218,7 +220,7 @@ export default function MobileBottomNav() {
           {items.map((item, index) => {
             const selected = item.href === pathname;
             const indicatorTarget = index === desktopIndicatorIndex;
-            return <Link key={item.label} href={item.href} className={`desktop-nav-item${selected ? " is-active" : ""}${indicatorTarget ? " is-indicator-target" : ""}`} aria-current={selected ? "page" : undefined} title={!desktopExpanded ? item.label : undefined} onClick={handleLinkClick}>
+            return <Link key={item.label} href={item.href} className={`desktop-nav-item${selected ? " is-active" : ""}${indicatorTarget ? " is-indicator-target" : ""}`} aria-current={selected ? "page" : undefined} title={!desktopExpanded ? item.label : undefined}>
               <span className="desktop-nav-item-icon"><NavIcon>{item.icon}</NavIcon></span>
               <span className="desktop-nav-item-label">{item.label}</span>
               {selected && <span className="desktop-nav-active-dot" aria-hidden="true" />}
@@ -242,7 +244,7 @@ export default function MobileBottomNav() {
           <span className="mobile-bottom-nav__indicator" aria-hidden="true" />
           {items.map((item) => {
             const selected = item.href === pathname;
-            return <Link key={item.label} href={item.href} draggable="false" className={`mobile-bottom-nav__item${selected ? " is-active" : ""}${mobileIndicatorIndex === items.indexOf(item) ? " is-indicator-target" : ""}`} aria-current={selected ? "page" : undefined} onClick={handleLinkClick}>
+            return <Link key={item.label} href={item.href} draggable="false" className={`mobile-bottom-nav__item${selected ? " is-active" : ""}${mobileIndicatorIndex === items.indexOf(item) ? " is-indicator-target" : ""}`} aria-current={selected ? "page" : undefined}>
               <span className="mobile-bottom-nav__icon"><NavIcon>{item.icon}</NavIcon></span>
               <span className="mobile-bottom-nav__label">{item.label}</span>
             </Link>;
