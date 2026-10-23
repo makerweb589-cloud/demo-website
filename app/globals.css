@@ -4152,3 +4152,124 @@ td small {
     padding: 13px 22px !important;
   }
 }
+
+/* =====================================================
+   NEXA PURE-WHITE + BLUE LIQUID GLASS THEME (2026)
+   Page canvas stays pure #fff. Blue is an accent, never
+   the site/page background. Nav selection belongs to the
+   movable glass indicator, not the individual menu item.
+===================================================== */
+:root {
+  --ink: #171b24;
+  --muted: #687181;
+  --line: #e8edf5;
+  --paper: #ffffff;
+  --white: #ffffff;
+  --accent: #2979FF;
+  --accent-dark: #1764e8;
+  --soft: #f5f8ff;
+}
+html, body { background: #ffffff !important; }
+body { color: #171b24; }
+.app-shell, main, .page, .home-page, .dashboard-layout, .dashboard-main-wide,
+.about-page, .overview-page, section.page-section { background-color: #ffffff; }
+.site-header { background: rgba(255,255,255,.94) !important; border-bottom-color: #edf0f5 !important; }
+button:focus-visible, a:focus-visible, input:focus-visible, textarea:focus-visible { outline-color: #2979FF !important; }
+
+/* All primary action buttons share the requested brand blue. */
+.button, .button-dark, .nav-cta, .submit-button, .refresh-button,
+.about-cta .button, .dashboard-header .button, .about-final-cta .button,
+.about-values-cta .button {
+  background: #2979FF !important;
+  color: #ffffff !important;
+  border-color: #2979FF !important;
+  box-shadow: 0 5px 14px rgba(41,121,255,.18), inset 0 1px 0 rgba(255,255,255,.22) !important;
+}
+.button:hover, .button-dark:hover, .nav-cta:hover, .submit-button:hover,
+.refresh-button:hover, .about-cta .button:hover, .dashboard-header .button:hover {
+  background: #1764e8 !important;
+  border-color: #1764e8 !important;
+  box-shadow: 0 7px 20px rgba(41,121,255,.24) !important;
+}
+.button:disabled, .submit-button:disabled, .refresh-button:disabled { opacity: .58; }
+.brand-icon, .desktop-nav-brand-mark, .about-footnote-mark { background: #2979FF !important; color: #ffffff !important; }
+.brand-dot { color: #2979FF !important; }
+
+/* Calm, nearly colourless glass panels for the dashboard. */
+.dashboard-banner, .stat-card, .requests-panel, .request-card,
+.dashboard-summary-card, .dashboard-widget, .overview-card, .about-card {
+  background: rgba(255,255,255,.82) !important;
+  border-color: rgba(220,228,240,.86) !important;
+  box-shadow: 0 10px 32px rgba(25,45,80,.045), inset 0 1px 0 rgba(255,255,255,.98) !important;
+  -webkit-backdrop-filter: blur(18px) saturate(1.08);
+  backdrop-filter: blur(18px) saturate(1.08);
+}
+.dashboard-banner { background: rgba(255,255,255,.94) !important; }
+.dashboard-banner-link, .text-link, .overview-link { color: #2979FF !important; }
+
+/* Desktop sidebar: translucent white glass and a visibly moving glass pill. */
+@media (min-width: 769px) {
+  .desktop-nav-drawer {
+    background: rgba(255,255,255,.76) !important;
+    border-color: rgba(220,229,242,.9) !important;
+    box-shadow: 0 18px 55px rgba(27,48,82,.09), inset 0 1px 0 rgba(255,255,255,.98) !important;
+    -webkit-backdrop-filter: blur(34px) saturate(1.35) !important;
+    backdrop-filter: blur(34px) saturate(1.35) !important;
+  }
+  .desktop-nav-indicator {
+    background: linear-gradient(145deg, rgba(255,255,255,.98), rgba(239,246,255,.88)) !important;
+    border-color: rgba(255,255,255,.99) !important;
+    box-shadow: 0 5px 17px rgba(25,55,100,.12), inset 0 1px 0 #fff, inset 0 -1px 0 rgba(41,121,255,.12) !important;
+  }
+  .desktop-nav-list.is-dragging .desktop-nav-indicator {
+    box-shadow: 0 8px 23px rgba(41,121,255,.16), inset 0 1px 0 #fff !important;
+    filter: saturate(1.08);
+  }
+  .desktop-nav-item, .desktop-nav-item:hover, .desktop-nav-item.is-active,
+  .desktop-nav-item.is-indicator-target {
+    background: transparent !important;
+    border-color: transparent !important;
+    box-shadow: none !important;
+  }
+  .desktop-nav-item.is-active, .desktop-nav-item.is-indicator-target { color: #1764e8 !important; }
+  .desktop-nav-item.is-active .desktop-nav-item-icon,
+  .desktop-nav-item.is-indicator-target .desktop-nav-item-icon { color: #2979FF !important; }
+  .desktop-nav-toggle { border-color: rgba(215,225,239,.9) !important; color: #2979FF !important; }
+}
+
+/* Mobile: the white liquid-glass capsule itself slides under the selection.
+   No persistent coloured tile is left behind on the previously selected item. */
+@media (max-width: 768px) {
+  .mobile-bottom-nav__inner {
+    background: rgba(255,255,255,.72) !important;
+    border-color: rgba(220,230,244,.88) !important;
+    box-shadow: 0 12px 34px rgba(24,45,78,.13), inset 0 1px 0 rgba(255,255,255,.99), inset 0 -1px 0 rgba(220,230,244,.42) !important;
+    -webkit-backdrop-filter: blur(34px) saturate(1.45) !important;
+    backdrop-filter: blur(34px) saturate(1.45) !important;
+    touch-action: pan-y;
+  }
+  .mobile-bottom-nav__indicator {
+    background: linear-gradient(145deg, rgba(255,255,255,.99), rgba(241,247,255,.94)) !important;
+    border-color: rgba(255,255,255,1) !important;
+    box-shadow: 0 4px 15px rgba(25,55,100,.13), inset 0 1px 0 #fff, inset 0 -1px 0 rgba(41,121,255,.12) !important;
+    will-change: transform;
+  }
+  .mobile-bottom-nav__inner.is-dragging .mobile-bottom-nav__indicator {
+    box-shadow: 0 7px 21px rgba(41,121,255,.18), inset 0 1px 0 #fff !important;
+    filter: saturate(1.1);
+  }
+  .mobile-bottom-nav__item, .mobile-bottom-nav__item.is-active,
+  .mobile-bottom-nav__item.is-indicator-target,
+  .mobile-bottom-nav__item.is-active:active {
+    background: transparent !important;
+    box-shadow: none !important;
+    border-color: transparent !important;
+  }
+  .mobile-bottom-nav__item { color: #737d8d !important; }
+  .mobile-bottom-nav__item.is-active,
+  .mobile-bottom-nav__item.is-indicator-target { color: #1764e8 !important; }
+  .mobile-bottom-nav__item.is-active .mobile-bottom-nav__icon,
+  .mobile-bottom-nav__item.is-indicator-target .mobile-bottom-nav__icon { color: #2979FF !important; }
+  .mobile-bottom-nav__item.is-active .mobile-bottom-nav__label,
+  .mobile-bottom-nav__item.is-indicator-target .mobile-bottom-nav__label { font-weight: 800 !important; }
+}
