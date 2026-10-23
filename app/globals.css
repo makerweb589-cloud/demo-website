@@ -3950,3 +3950,205 @@ td small {
 @media (max-width: 768px) {
   .mobile-bottom-nav__inner.is-dragging .mobile-bottom-nav__item.is-active:not(.is-indicator-target) { color: #7b8172 !important; }
 }
+
+/* Shared page system: keep the Home typography and visual rhythm consistent. */
+.nexa-page,
+.nexa-page button,
+.nexa-page input,
+.nexa-page select,
+.nexa-page textarea {
+  font-family: "DM Sans", Arial, sans-serif;
+}
+
+.nexa-page-hero h1 {
+  font-family: "Manrope", sans-serif !important;
+  font-size: clamp(48px, 5.2vw, 70px) !important;
+  font-weight: 600 !important;
+  letter-spacing: -3.8px !important;
+  line-height: 1.12 !important;
+}
+
+.nexa-page-hero h1 span {
+  color: #8ba92c !important;
+}
+
+.nexa-page-hero-copy > p:not(.nexa-kicker) {
+  font-family: "DM Sans", Arial, sans-serif !important;
+  font-size: 14px !important;
+  line-height: 1.9 !important;
+}
+
+.nexa-page-hero .section-label,
+.nexa-page .section-label,
+.nexa-kicker {
+  font-family: "DM Sans", Arial, sans-serif !important;
+}
+
+.nexa-page-actions .button,
+.nexa-page-actions .text-link {
+  font-family: "DM Sans", Arial, sans-serif !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+}
+
+.nexa-dashboard-page .dashboard-page-hero {
+  border-bottom: 1px solid var(--line);
+}
+
+.dashboard-content-wrap {
+  width: min(1180px, 88%);
+  margin: 0 auto;
+  padding: 36px 0 55px;
+}
+
+.dashboard-section-head {
+  width: 100%;
+  margin: 0 0 24px;
+}
+
+.dashboard-content-wrap .overview-stats-grid {
+  width: 100%;
+}
+
+.dashboard-requests-panel {
+  margin-top: 18px;
+  border-radius: 21px;
+  box-shadow: 0 12px 30px rgba(42, 48, 31, .025);
+}
+
+.dashboard-requests-panel .requests-heading h2 {
+  margin: 8px 0 6px;
+  font-family: "Manrope", sans-serif;
+  font-size: 23px;
+  letter-spacing: -1px;
+}
+
+.dashboard-requests-panel .requests-heading p {
+  font-size: 12px;
+}
+
+.dashboard-requests-panel .requests-heading .section-label {
+  color: #888d7e;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 1.6px;
+}
+
+.dashboard-page-hero .refresh-button,
+.nexa-dashboard-page .refresh-button,
+.nexa-overview-page .overview-refresh {
+  min-height: 48px !important;
+  border: 1px solid #25271f !important;
+  border-radius: 9999px !important;
+  background: #25271f !important;
+  color: #fff !important;
+  opacity: 1;
+  font-family: "DM Sans", Arial, sans-serif !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  cursor: pointer;
+}
+
+.dashboard-page-hero .refresh-button:disabled,
+.nexa-dashboard-page .refresh-button:disabled,
+.nexa-overview-page .overview-refresh:disabled {
+  color: #fff !important;
+  background: #5d6055 !important;
+  opacity: 1;
+  cursor: wait;
+}
+
+.nexa-about-page .nexa-page-hero-copy,
+.nexa-about-page .about-intro-copy,
+.nexa-about-page .about-capabilities-copy,
+.nexa-about-page .about-faq-section > div:first-child,
+.nexa-overview-page .nexa-page-hero-copy,
+.nexa-dashboard-page .nexa-page-hero-copy {
+  text-align: left;
+}
+
+.nexa-about-page h2,
+.nexa-overview-page h2,
+.nexa-dashboard-page h2,
+.nexa-about-page h3,
+.nexa-overview-page h3,
+.nexa-dashboard-page h3 {
+  font-family: "Manrope", sans-serif;
+}
+
+.nexa-about-page .about-intro-copy h2,
+.nexa-about-page .about-section-heading h2,
+.nexa-about-page .about-capabilities-copy h2,
+.nexa-about-page .about-faq-section > div:first-child h2 {
+  font-size: clamp(30px, 3.8vw, 46px);
+  font-weight: 600;
+  letter-spacing: -2px;
+  line-height: 1.15;
+}
+
+.brand-image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border-radius: inherit;
+}
+
+.desktop-nav-brand-mark.brand-image {
+  width: 31px;
+  height: 31px;
+  flex: 0 0 31px;
+  border-radius: 10px;
+  background: transparent;
+  object-fit: contain;
+}
+
+.brand-icon.brand-image {
+  width: 29px;
+  height: 29px;
+  object-fit: contain;
+  background: transparent;
+  border-radius: 9px;
+}
+
+@media (min-width: 769px) {
+  .nexa-dashboard-page .dashboard-page-hero,
+  .nexa-overview-page .overview-hero,
+  .nexa-about-page .about-hero {
+    min-height: 540px;
+  }
+}
+
+@media (max-width: 768px) {
+  .nexa-page-hero h1 {
+    font-size: clamp(41px, 10vw, 58px) !important;
+    letter-spacing: -2.8px !important;
+    line-height: 1.08 !important;
+  }
+
+  .dashboard-content-wrap {
+    width: auto;
+    margin: 0 18px;
+    padding: 30px 0 35px;
+  }
+
+  .dashboard-section-head {
+    width: 100%;
+    margin: 0 0 18px;
+  }
+
+  .dashboard-content-wrap .overview-stats-grid {
+    width: 100%;
+    margin: 0;
+  }
+
+  .dashboard-requests-panel .requests-heading {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .dashboard-page-hero .refresh-button {
+    min-height: 46px !important;
+    padding: 13px 22px !important;
+  }
+}
