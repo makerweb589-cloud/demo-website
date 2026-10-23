@@ -3,10 +3,60 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 
+function OutlineIcon({ name, size = 18 }) {
+  const common = {
+    width: size,
+    height: size,
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: 1.6,
+    strokeLinecap: "round",
+    strokeLinejoin: "round",
+    "aria-hidden": true,
+    focusable: "false"
+  };
+
+  switch (name) {
+    case "overview":
+      return (
+        <svg {...common}>
+          <rect x="3.5" y="3.5" width="7" height="7" rx="1.5" />
+          <rect x="13.5" y="3.5" width="7" height="7" rx="1.5" />
+          <rect x="3.5" y="13.5" width="7" height="7" rx="1.5" />
+          <rect x="13.5" y="13.5" width="7" height="7" rx="1.5" />
+        </svg>
+      );
+
+    case "requests":
+      return (
+        <svg {...common}>
+          <rect x="5" y="3.5" width="14" height="17" rx="2" />
+          <path d="M9 8h6" />
+          <path d="M9 12h6" />
+          <path d="M9 16h3.5" />
+        </svg>
+      );
+
+    case "about":
+      return (
+        <svg {...common}>
+          <circle cx="12" cy="12" r="9" />
+          <path d="M12 11v5" />
+          <path d="M12 8h.01" />
+        </svg>
+      );
+
+    default:
+      return null;
+  }
+}
+
 export default function DashboardPage() {
   const [requests, setRequests] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [activeSection, setActiveSection] = useState("overview");
 
   async function loadRequests() {
     try {
@@ -20,7 +70,7 @@ export default function DashboardPage() {
         throw new Error("Unable to load demo requests.");
       }
 
-      setRequests(data.requests);
+      setRequests(Array.isArray(data.requests) ? data.requests : []);
       setError("");
     } catch {
       setError("Could not load requests. Please try again.");
@@ -33,6 +83,15 @@ export default function DashboardPage() {
     loadRequests();
   }, []);
 
+  function selectRequests() {
+    setActiveSection("requests");
+
+    document.getElementById("requests")?.scrollIntoView({
+      behavior: "smooth",
+      block: "start"
+    });
+  }
+
   const pending = requests.filter(
     (request) => request.status === "Pending"
   ).length;
@@ -42,7 +101,13 @@ export default function DashboardPage() {
   ).length;
 
   function formatDate(date) {
-    return new Date(date).toLocaleDateString("en-IN", {
+    if (!date) return "—";
+
+    const parsedDate = new Date(date);
+
+    if (Number.isNaN(parsedDate.getTime())) return "—";
+
+    return parsedDate.toLocaleDateString("en-IN", {
       day: "2-digit",
       month: "short",
       year: "numeric"
@@ -59,25 +124,48 @@ export default function DashboardPage() {
 
         <p className="sidebar-label">WORKSPACE</p>
 
-        <Link href="/dashboard" className="sidebar-link active">
-          <span>▦</span>
-          Overview
-        </Link>
+        <nav className="dashboard-nav" aria-label="Dashboard navigation">
+          <Link
+            href="/dashboard"
+            className={`sidebar-link ${
+              activeSection === "overview" ? "active" : ""
+            }`}
+            aria-current={activeSection === "overview" ? "page" : undefined}
+            onClick={() => setActiveSection("overview")}
+          >
+            <OutlineIcon name="overview" />
+            <span className="sidebar-link-text">Overview</span>
+          </Link>
 
-        <a href="#requests" className="sidebar-link">
-          <span>☷</span>
-          Demo Requests
-        </a>
+          <a
+            href="#requests"
+            className={`sidebar-link ${
+              activeSection === "requests" ? "active" : ""
+            }`}
+            aria-current={activeSection === "requests" ? "location" : undefined}
+            onClick={selectRequests}
+          >
+            <OutlineIcon name="requests" />
+            <span className="sidebar-link-text">Demo Requests</span>
+          </a>
 
-        <Link href="/about" className="sidebar-link">
-          <span>ⓘ</span>
-          About
-        </Link>
+          <Link
+            href="/about"
+            className={`sidebar-link ${
+              activeSection === "about" ? "active" : ""
+            }`}
+            aria-current={activeSection === "about" ? "page" : undefined}
+            onClick={() => setActiveSection("about")}
+          >
+            <OutlineIcon name="about" />
+            <span className="sidebar-link-text">About</span>
+          </Link>
+        </nav>
 
         <div className="sidebar-bottom">
           <div className="profile-avatar">N</div>
 
-          <div>
+          <div className="sidebar-profile-info">
             <strong>Demo Workspace</strong>
             <span>Preview mode</span>
           </div>
@@ -93,7 +181,7 @@ export default function DashboardPage() {
           </div>
 
           <Link href="/#demo" className="button button-dark">
-            + New demo request
+            New demo request
           </Link>
         </header>
 
@@ -106,7 +194,7 @@ export default function DashboardPage() {
             </p>
           </div>
 
-          <div className="banner-symbol">✳</div>
+          <div className="banner-symbol" aria-hidden="true">✳</div>
         </div>
 
         <div className="stats-grid">
@@ -137,25 +225,30 @@ export default function DashboardPage() {
             </div>
 
             <button
+              type="button"
               className="refresh-button"
               onClick={() => {
                 setLoading(true);
                 loadRequests();
               }}
             >
-              ↻ Refresh
+              Refresh
             </button>
           </div>
 
-          {error && <p className="dashboard-error">{error}</p>}
+          {error && (
+            <p className="dashboard-error" role="alert">
+              {error}
+            </p>
+          )}
 
           {loading ? (
-            <div className="dashboard-empty">
+            <div className="dashboard-empty" aria-live="polite">
               Loading requests...
             </div>
           ) : requests.length === 0 ? (
             <div className="dashboard-empty">
-              <span>☷</span>
+              <OutlineIcon name="requests" size={28} />
               <h3>No requests yet</h3>
               <p>
                 Demo requests submitted through the home page
@@ -188,9 +281,7 @@ export default function DashboardPage() {
                       </td>
 
                       <td>{request.email}</td>
-
                       <td>{request.company || "—"}</td>
-
                       <td>{formatDate(request.createdAt)}</td>
 
                       <td>
@@ -201,7 +292,7 @@ export default function DashboardPage() {
                               : "status-pending"
                           }`}
                         >
-                          {request.status}
+                          {request.status || "Pending"}
                         </span>
                       </td>
                     </tr>
