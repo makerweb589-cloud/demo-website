@@ -70,7 +70,9 @@ export default function DashboardPage() {
         throw new Error("Unable to load demo requests.");
       }
 
-      setRequests(Array.isArray(data.requests) ? data.requests : []);
+      setRequests(
+        Array.isArray(data.requests) ? data.requests : []
+      );
       setError("");
     } catch {
       setError("Could not load requests. Please try again.");
@@ -83,8 +85,32 @@ export default function DashboardPage() {
     loadRequests();
   }, []);
 
-  function selectRequests() {
+  useEffect(() => {
+    function updateActiveSection() {
+      if (window.location.hash === "#requests") {
+        setActiveSection("requests");
+      } else {
+        setActiveSection("overview");
+      }
+    }
+
+    updateActiveSection();
+    window.addEventListener("hashchange", updateActiveSection);
+
+    return () => {
+      window.removeEventListener("hashchange", updateActiveSection);
+    };
+  }, []);
+
+  function selectOverview() {
+    setActiveSection("overview");
+  }
+
+  function selectRequests(event) {
+    event.preventDefault();
     setActiveSection("requests");
+
+    window.history.replaceState(null, "", "#requests");
 
     document.getElementById("requests")?.scrollIntoView({
       behavior: "smooth",
@@ -105,7 +131,9 @@ export default function DashboardPage() {
 
     const parsedDate = new Date(date);
 
-    if (Number.isNaN(parsedDate.getTime())) return "—";
+    if (Number.isNaN(parsedDate.getTime())) {
+      return "—";
+    }
 
     return parsedDate.toLocaleDateString("en-IN", {
       day: "2-digit",
@@ -124,14 +152,19 @@ export default function DashboardPage() {
 
         <p className="sidebar-label">WORKSPACE</p>
 
-        <nav className="dashboard-nav" aria-label="Dashboard navigation">
+        <nav
+          className="dashboard-nav"
+          aria-label="Dashboard navigation"
+        >
           <Link
-            href="/dashboard"
+            href="/dashboard#overview"
             className={`sidebar-link ${
               activeSection === "overview" ? "active" : ""
             }`}
-            aria-current={activeSection === "overview" ? "page" : undefined}
-            onClick={() => setActiveSection("overview")}
+            aria-current={
+              activeSection === "overview" ? "page" : undefined
+            }
+            onClick={selectOverview}
           >
             <OutlineIcon name="overview" />
             <span className="sidebar-link-text">Overview</span>
@@ -142,7 +175,9 @@ export default function DashboardPage() {
             className={`sidebar-link ${
               activeSection === "requests" ? "active" : ""
             }`}
-            aria-current={activeSection === "requests" ? "location" : undefined}
+            aria-current={
+              activeSection === "requests" ? "location" : undefined
+            }
             onClick={selectRequests}
           >
             <OutlineIcon name="requests" />
@@ -151,11 +186,7 @@ export default function DashboardPage() {
 
           <Link
             href="/about"
-            className={`sidebar-link ${
-              activeSection === "about" ? "active" : ""
-            }`}
-            aria-current={activeSection === "about" ? "page" : undefined}
-            onClick={() => setActiveSection("about")}
+            className="sidebar-link"
           >
             <OutlineIcon name="about" />
             <span className="sidebar-link-text">About</span>
@@ -173,9 +204,14 @@ export default function DashboardPage() {
       </aside>
 
       <section className="dashboard-main">
-        <header className="dashboard-header">
+        <header
+          className="dashboard-header"
+          id="overview"
+        >
           <div>
-            <span className="section-label">WORKSPACE / OVERVIEW</span>
+            <span className="section-label">
+              WORKSPACE / OVERVIEW
+            </span>
             <h1>Dashboard</h1>
             <p>Welcome to your business overview.</p>
           </div>
@@ -194,7 +230,9 @@ export default function DashboardPage() {
             </p>
           </div>
 
-          <div className="banner-symbol" aria-hidden="true">✳</div>
+          <div className="banner-symbol" aria-hidden="true">
+            ✳
+          </div>
         </div>
 
         <div className="stats-grid">
@@ -217,11 +255,16 @@ export default function DashboardPage() {
           </article>
         </div>
 
-        <section className="requests-panel" id="requests">
+        <section
+          className="requests-panel"
+          id="requests"
+        >
           <div className="requests-heading">
             <div>
               <h2>Recent Requests</h2>
-              <p>Latest demo enquiries submitted through the website.</p>
+              <p>
+                Latest demo enquiries submitted through the website.
+              </p>
             </div>
 
             <button
@@ -281,7 +324,9 @@ export default function DashboardPage() {
                       </td>
 
                       <td>{request.email}</td>
+
                       <td>{request.company || "—"}</td>
+
                       <td>{formatDate(request.createdAt)}</td>
 
                       <td>
