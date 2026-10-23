@@ -1512,3 +1512,108 @@ td small {
     animation-duration: 0.01ms !important;
   }
 }
+
+
+
+
+
+
+
+
+
+
+/* ============================================
+   NEXA — FINAL FULL PILL BUTTON DESIGN
+   100% rounded + perfectly centered text
+============================================ */
+
+/* Apply full pill shape to all buttons */
+.button,
+.button-dark,
+.nav-cta,
+.submit-button,
+.refresh-button,
+.about-cta .button,
+.dashboard-header .button {
+  display: inline-flex !important;
+
+  align-items: center !important;
+  justify-content: center !important;
+
+  text-align: center !important;
+  text-indent: 0 !important;
+
+  border-radius: 9999px !important;
+
+  min-height: 48px;
+  padding: 14px 28px !important;
+
+  line-height: 1.2 !important;
+  white-space: nowrap;
+
+  box-sizing: border-box;
+  gap: 0 !important;
+}
+
+/* Full-width demo form button */
+.submit-button {
+  display: flex !important;
+  width: 100% !important;
+
+  align-items: center !important;
+  justify-content: center !important;
+
+  text-align: center !important;
+  border-radius: 9999px !important;
+}
+
+/* Remove arrows/icons inside buttons */
+.button > span,
+.nav-cta > span,
+.submit-button > span,
+.refresh-button > span,
+.about-cta .button > span,
+.dashboard-header .button > span {
+  display: none !important;
+}
+
+/* Prevent pseudo-elements from affecting button layout */
+.button::before,
+.button::after,
+.nav-cta::before,
+.nav-cta::after,
+.submit-button::before,
+.submit-button::after,
+.refresh-button::before,
+.refresh-button::after {
+  pointer-events: none;
+}
+
+/* Keep button labels centered */
+.button,
+.button-dark,
+.nav-cta,
+.submit-button,
+.refresh-button {
+  position: relative;
+  text-indent: 0 !important;
+}
+
+/* Mobile button styling */
+@media (max-width: 600px) {
+  .button,
+  .button-dark,
+  .nav-cta,
+  .submit-button,
+  .refresh-button,
+  .about-cta .button,
+  .dashboard-header .button {
+    min-height: 46px;
+    padding: 13px 22px !important;
+    border-radius: 9999px !important;
+  }
+
+  .submit-button {
+    width: 100% !important;
+  }
+}
