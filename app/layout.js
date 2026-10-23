@@ -1,5 +1,5 @@
 import "./globals.css";
-
+import MobileBottomNav from "../components/MobileBottomNav";
 export const metadata = {
   title: "Nexa — Business Solutions",
   description:
