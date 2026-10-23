@@ -1,3 +1,4 @@
+
 "use client";
 
 import { usePathname } from "next/navigation";
@@ -8,7 +9,7 @@ const navItems = [
     label: "Home",
     href: "/",
     icon: "home",
-    isActive: (pathname, hash) => pathname === "/",
+    isActive: (pathname) => pathname === "/",
   },
   {
     label: "Dashboard",
@@ -33,7 +34,7 @@ const navItems = [
 ];
 
 function NavIcon({ name }) {
-  const commonProps = {
+  const props = {
     width: 22,
     height: 22,
     viewBox: "0 0 24 24",
@@ -48,7 +49,7 @@ function NavIcon({ name }) {
   switch (name) {
     case "home":
       return (
-        <svg {...commonProps}>
+        <svg {...props}>
           <path d="m3 10 9-7 9 7" />
           <path d="M5 9v11h14V9" />
           <path d="M9 20v-7h6v7" />
@@ -57,7 +58,7 @@ function NavIcon({ name }) {
 
     case "dashboard":
       return (
-        <svg {...commonProps}>
+        <svg {...props}>
           <rect x="3" y="3" width="8" height="8" rx="2" />
           <rect x="13" y="3" width="8" height="5" rx="2" />
           <rect x="13" y="10" width="8" height="11" rx="2" />
@@ -67,7 +68,7 @@ function NavIcon({ name }) {
 
     case "overview":
       return (
-        <svg {...commonProps}>
+        <svg {...props}>
           <path d="M3 3v18h18" />
           <path d="m7 14 4-4 3 3 6-7" />
           <path d="M15 6h5v5" />
@@ -76,7 +77,7 @@ function NavIcon({ name }) {
 
     case "about":
       return (
-        <svg {...commonProps}>
+        <svg {...props}>
           <circle cx="12" cy="12" r="9" />
           <path d="M12 11v5" />
           <path d="M12 7h.01" />
@@ -93,9 +94,7 @@ export default function MobileBottomNav() {
   const [hash, setHash] = useState("");
 
   useEffect(() => {
-    const updateHash = () => {
-      setHash(window.location.hash);
-    };
+    const updateHash = () => setHash(window.location.hash);
 
     updateHash();
 
@@ -109,7 +108,10 @@ export default function MobileBottomNav() {
   }, [pathname]);
 
   return (
-    <nav className="mobile-bottom-nav" aria-label="Mobile navigation">
+    <nav
+      className="mobile-bottom-nav"
+      aria-label="Mobile navigation"
+    >
       {navItems.map((item) => {
         const active = item.isActive(pathname, hash);
 
