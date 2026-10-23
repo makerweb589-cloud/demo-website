@@ -1,4 +1,5 @@
 import Link from "next/link";
+import BrandLogo from "../../components/BrandLogo";
 
 const principles = [
   { number: "01", title: "Start with clarity", text: "We take time to understand the goal, the people it serves, and what a useful result should look like before choosing a direction." },
@@ -16,7 +17,7 @@ export default function AboutPage() {
   return (
     <main className="nexa-page nexa-about-page">
       <section className="nexa-page-hero about-hero">
-        <div className="nexa-page-hero-copy"><span className="section-label">ABOUT NEXA</span><p className="nexa-kicker"><span className="status-dot" /> THOUGHTFUL BY DESIGN</p><h1>Better business starts with <span>a clearer view.</span></h1><p>Nexa brings strategy, digital thinking, and practical support together to help businesses turn good ideas into meaningful progress.</p><div className="nexa-page-actions"><Link href="/#demo" className="button button-dark">Let&apos;s talk <span aria-hidden="true">↗</span></Link><Link href="/overview" className="text-link">Explore the overview <span aria-hidden="true">→</span></Link></div><div className="about-hero-footnote"><span className="about-footnote-mark">N</span><span>Clear thinking. Useful work. Better next steps.</span></div></div>
+        <div className="nexa-page-hero-copy"><span className="section-label">ABOUT NEXA</span><p className="nexa-kicker"><span className="status-dot" /> YOUR NEXT CHAPTER STARTS HERE</p><h1>Better business starts with <span>a clearer view.</span></h1><p>Nexa brings strategy, digital thinking, and practical support together to help businesses turn good ideas into meaningful progress.</p><div className="nexa-page-actions"><Link href="/#demo" className="button button-dark">Let&apos;s talk <span aria-hidden="true">↗</span></Link><Link href="/overview" className="text-link">Explore the overview <span aria-hidden="true">→</span></Link></div><div className="about-hero-footnote"><span className="about-footnote-mark">N</span><span>Clear thinking. Useful work. Better next steps.</span></div></div>
         <div className="about-hero-visual" aria-hidden="true"><div className="about-visual-orbit orbit-a" /><div className="about-visual-orbit orbit-b" /><div className="about-visual-orbit orbit-c" /><div className="about-visual-center"><span>N</span><small>nexa.</small></div><div className="about-visual-tag tag-a">Strategy</div><div className="about-visual-tag tag-b">Digital</div><div className="about-visual-tag tag-c">Growth</div></div>
       </section>
 
@@ -31,7 +32,7 @@ export default function AboutPage() {
       <section className="about-faq-section"><div><span className="section-label">A FEW QUICK ANSWERS</span><h2>Getting to know Nexa.</h2><p>Here is what guides the way we work.</p></div><div className="about-faq-list"><article><h3>Who is Nexa for?</h3><p>For businesses and teams looking for clearer strategy, considered digital solutions, or practical support as they grow.</p></article><article><h3>How does a project begin?</h3><p>It starts with a conversation about your goals, your current challenges, and what a successful outcome would mean to you.</p></article><article><h3>What does Nexa focus on?</h3><p>Business strategy, digital solutions, and growth support—connected by a focus on clarity and practical results.</p></article></div></section>
 
       <section className="about-final-cta"><span className="section-label">READY WHEN YOU ARE</span><h2>Let&apos;s make your next move a good one.</h2><p>Tell us what you are working toward. We can start with the idea and work out the next step together.</p><Link href="/#demo" className="button button-dark">Book a demo <span aria-hidden="true">↗</span></Link></section>
-      <footer className="about-page-footer"><Link href="/" className="brand"><span className="brand-icon">N</span> nexa<span className="brand-dot">.</span></Link><span>Thoughtful strategies. Modern solutions. Clear next steps.</span><Link href="/dashboard">Open dashboard ↗</Link></footer>
+      <footer className="about-page-footer"><Link href="/" className="brand"><BrandLogo className="brand-icon" /> nexa<span className="brand-dot">.</span></Link><span>Thoughtful strategies. Modern solutions. Clear next steps.</span><Link href="/dashboard">Open dashboard ↗</Link></footer>
     </main>
   );
 }
