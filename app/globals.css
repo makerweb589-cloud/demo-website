@@ -1,3 +1,4 @@
+}
 @import url("https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap");
 
 :root {
@@ -3393,4 +3394,378 @@ td small {
   .stat-card > span { font-size: 10px !important; }
   .stat-card > small { font-size: 9px !important; }
   .requests-heading { align-items: flex-start; flex-direction: column; padding: 17px !important; }
+}
+
+/* =====================================================
+   NEXA RESPONSIVE NAVIGATION — GLASS / PILL UPDATE
+   Desktop: collapsible glass sidebar.
+   Mobile: compact fixed liquid-glass bottom bar.
+===================================================== */
+
+/* Desktop drawer */
+.desktop-nav-drawer {
+  display: none;
+}
+
+@media (min-width: 769px) {
+  .desktop-nav-drawer {
+    display: flex;
+    position: fixed;
+    z-index: 10000;
+    top: 18px;
+    left: 18px;
+    bottom: 18px;
+    width: 248px;
+    flex-direction: column;
+    padding: 17px 12px 13px;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.76);
+    border-radius: 24px;
+    background: rgba(250, 251, 246, 0.78);
+    box-shadow: 0 18px 55px rgba(36, 43, 25, 0.10), inset 0 1px 0 rgba(255,255,255,.9);
+    -webkit-backdrop-filter: blur(28px) saturate(1.35);
+    backdrop-filter: blur(28px) saturate(1.35);
+    transition: width 420ms cubic-bezier(.22, 1, .36, 1), padding 420ms cubic-bezier(.22, 1, .36, 1), background 250ms ease;
+  }
+
+  .desktop-nav-drawer.is-collapsed {
+    width: 76px;
+    padding-left: 9px;
+    padding-right: 9px;
+  }
+
+  body.desktop-nav-expanded .app-shell {
+    padding-left: 284px;
+    transition: padding-left 420ms cubic-bezier(.22, 1, .36, 1);
+  }
+
+  body.desktop-nav-collapsed .app-shell {
+    padding-left: 110px;
+    transition: padding-left 420ms cubic-bezier(.22, 1, .36, 1);
+  }
+
+  .desktop-nav-brand-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 42px;
+    gap: 8px;
+    margin-bottom: 31px;
+  }
+
+  .desktop-nav-brand {
+    display: flex;
+    align-items: center;
+    min-width: 0;
+    gap: 10px;
+    overflow: hidden;
+    color: var(--ink, #20221f);
+  }
+
+  .desktop-nav-brand-mark {
+    display: grid;
+    place-items: center;
+    width: 37px;
+    height: 37px;
+    flex: 0 0 37px;
+    border-radius: 13px;
+    background: var(--accent, #d5f36a);
+    color: #20221f;
+    font-family: Manrope, sans-serif;
+    font-size: 20px;
+    font-weight: 800;
+    letter-spacing: -1px;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.7);
+  }
+
+  .desktop-nav-brand-name {
+    opacity: 1;
+    transform: translateX(0);
+    font-family: Manrope, sans-serif;
+    font-size: 22px;
+    font-weight: 800;
+    letter-spacing: -1.2px;
+    transition: opacity 180ms ease, transform 300ms cubic-bezier(.22, 1, .36, 1);
+  }
+
+  .desktop-nav-toggle {
+    display: grid;
+    place-items: center;
+    width: 31px;
+    height: 31px;
+    flex: 0 0 31px;
+    padding: 0;
+    border: 1px solid rgba(40, 45, 31, .08);
+    border-radius: 50%;
+    background: rgba(255,255,255,.76);
+    color: #51564a;
+    cursor: pointer;
+    transition: transform 320ms cubic-bezier(.22, 1, .36, 1), background 180ms ease, box-shadow 180ms ease;
+  }
+
+  .desktop-nav-toggle:hover {
+    background: #fff;
+    box-shadow: 0 4px 13px rgba(30,35,20,.10);
+  }
+
+  .desktop-nav-toggle:active { transform: scale(.91); }
+  .desktop-nav-toggle svg { width: 16px; height: 16px; }
+
+  .desktop-nav-caption {
+    padding: 0 12px;
+    margin-bottom: 12px;
+    color: #9a9d91;
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: 1.7px;
+    white-space: nowrap;
+    transition: opacity 160ms ease;
+  }
+
+  .desktop-nav-list {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    width: 100%;
+  }
+
+  .desktop-nav-item {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    width: 100%;
+    min-height: 49px;
+    padding: 0 13px;
+    overflow: hidden;
+    border: 1px solid transparent;
+    border-radius: 15px;
+    color: #777b70;
+    white-space: nowrap;
+    transition: color 220ms ease, background 220ms ease, border-color 220ms ease, transform 220ms ease, padding 320ms cubic-bezier(.22, 1, .36, 1);
+  }
+
+  .desktop-nav-item:hover {
+    color: #303529;
+    background: rgba(255,255,255,.56);
+  }
+
+  .desktop-nav-item:active { transform: scale(.975); }
+
+  .desktop-nav-item.is-active {
+    color: #34441e;
+    border-color: rgba(165, 191, 91, .22);
+    background: linear-gradient(135deg, rgba(222, 244, 162, .86), rgba(241, 248, 222, .82));
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.85), 0 5px 14px rgba(111, 135, 54, .08);
+  }
+
+  .desktop-nav-item-icon {
+    display: grid;
+    place-items: center;
+    width: 23px;
+    height: 23px;
+    flex: 0 0 23px;
+  }
+
+  .desktop-nav-item-icon svg { width: 22px; height: 22px; }
+
+  .desktop-nav-item-label {
+    flex: 1;
+    opacity: 1;
+    transform: translateX(0);
+    font-size: 12px;
+    font-weight: 700;
+    transition: opacity 170ms ease, transform 320ms cubic-bezier(.22, 1, .36, 1);
+  }
+
+  .desktop-nav-active-dot {
+    width: 5px;
+    height: 5px;
+    flex: 0 0 5px;
+    border-radius: 50%;
+    background: #718d34;
+    box-shadow: 0 0 0 3px rgba(113,141,52,.10);
+  }
+
+  .desktop-nav-footer {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    margin-top: auto;
+    padding: 13px 10px 5px;
+    border-top: 1px solid rgba(36,43,25,.07);
+    color: #92968a;
+    white-space: nowrap;
+  }
+
+  .desktop-nav-footer-dot {
+    width: 7px;
+    height: 7px;
+    flex: 0 0 7px;
+    border-radius: 50%;
+    background: #a7c75a;
+    box-shadow: 0 0 0 4px rgba(167,199,90,.13);
+  }
+
+  .desktop-nav-footer-text { font-size: 10px; font-weight: 600; transition: opacity 150ms ease; }
+
+  .desktop-nav-drawer.is-collapsed .desktop-nav-brand-row { flex-direction: column; gap: 13px; margin-bottom: 28px; }
+  .desktop-nav-drawer.is-collapsed .desktop-nav-brand-name,
+  .desktop-nav-drawer.is-collapsed .desktop-nav-caption,
+  .desktop-nav-drawer.is-collapsed .desktop-nav-item-label,
+  .desktop-nav-drawer.is-collapsed .desktop-nav-active-dot,
+  .desktop-nav-drawer.is-collapsed .desktop-nav-footer-text { display: none; }
+  .desktop-nav-drawer.is-collapsed .desktop-nav-brand { justify-content: center; }
+  .desktop-nav-drawer.is-collapsed .desktop-nav-toggle { transform: rotate(180deg); }
+  .desktop-nav-drawer.is-collapsed .desktop-nav-item { justify-content: center; gap: 0; padding: 0; }
+  .desktop-nav-drawer.is-collapsed .desktop-nav-footer { justify-content: center; padding-left: 0; padding-right: 0; }
+}
+
+/* Mobile liquid-glass pill bar */
+@media (max-width: 768px) {
+  .desktop-nav-drawer { display: none !important; }
+  body.desktop-nav-expanded .app-shell,
+  body.desktop-nav-collapsed .app-shell { padding-left: 0 !important; }
+
+  .mobile-bottom-nav {
+    display: block !important;
+    position: fixed !important;
+    z-index: 2147483000 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 8px 12px calc(8px + env(safe-area-inset-bottom, 0px)) !important;
+    border: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    isolation: isolate;
+    transform: none !important;
+    pointer-events: none;
+  }
+
+  .mobile-bottom-nav__inner {
+    --pill-inset: 4px;
+    position: relative;
+    display: grid !important;
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    align-items: stretch !important;
+    width: min(100%, 480px) !important;
+    min-height: 62px;
+    margin: 0 auto !important;
+    padding: 4px !important;
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,.78);
+    border-radius: 25px;
+    background: rgba(248, 250, 243, .76);
+    box-shadow: 0 8px 28px rgba(31, 39, 22, .13), inset 0 1px 0 rgba(255,255,255,.95), inset 0 -1px 0 rgba(255,255,255,.35);
+    -webkit-backdrop-filter: blur(28px) saturate(1.7);
+    backdrop-filter: blur(28px) saturate(1.7);
+    touch-action: pan-y;
+    pointer-events: auto;
+  }
+
+  .mobile-bottom-nav__indicator {
+    position: absolute;
+    z-index: 0;
+    top: 4px;
+    bottom: 4px;
+    left: 4px;
+    width: calc((100% - 8px) / 4);
+    border: 1px solid rgba(255,255,255,.96);
+    border-radius: 20px;
+    background: linear-gradient(145deg, rgba(255,255,255,.94), rgba(244, 249, 229, .90));
+    box-shadow: 0 3px 10px rgba(54, 67, 35, .10), inset 0 1px 0 rgba(255,255,255,1), inset 0 -1px 0 rgba(191, 210, 150, .14);
+    transform: translateX(calc(var(--active-index, 0) * 100%));
+    transition: transform 420ms cubic-bezier(.22, 1, .36, 1), top 220ms ease, bottom 220ms ease, border-radius 220ms ease;
+    pointer-events: none;
+  }
+
+  .mobile-bottom-nav__inner.is-dragging .mobile-bottom-nav__indicator {
+    top: 3px;
+    bottom: 3px;
+    border-radius: 19px;
+    transition: transform 100ms linear, top 100ms ease, bottom 100ms ease;
+    box-shadow: 0 5px 15px rgba(54,67,35,.14), inset 0 1px 0 rgba(255,255,255,1);
+  }
+
+  .mobile-bottom-nav__item {
+    position: relative;
+    z-index: 1;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 3px !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    min-height: 52px !important;
+    margin: 0 !important;
+    padding: 4px 1px !important;
+    border: 0 !important;
+    border-radius: 18px !important;
+    background: transparent !important;
+    color: #7b8172 !important;
+    text-align: center !important;
+    text-decoration: none !important;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    transition: color 220ms ease, transform 220ms ease;
+  }
+
+  .mobile-bottom-nav__item.is-active,
+  .mobile-bottom-nav__item.is-indicator-target { color: #35451e !important; }
+  .mobile-bottom-nav__item:active { transform: scale(.94); }
+  .mobile-bottom-nav__item.is-active:active { background: transparent !important; }
+
+  .mobile-bottom-nav__icon {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 23px !important;
+    height: 23px !important;
+    flex: 0 0 23px !important;
+    margin: 0 !important;
+  }
+
+  .mobile-bottom-nav__icon svg { display: block !important; width: 21px !important; height: 21px !important; flex-shrink: 0; }
+  .mobile-bottom-nav__label {
+    display: block !important;
+    width: 100% !important;
+    overflow: hidden;
+    color: inherit !important;
+    font-size: 9px !important;
+    font-weight: 650 !important;
+    line-height: 1.2 !important;
+    text-align: center !important;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .mobile-bottom-nav__item.is-active .mobile-bottom-nav__label,
+  .mobile-bottom-nav__item.is-indicator-target .mobile-bottom-nav__label { font-weight: 800 !important; }
+
+  .app-shell { padding-bottom: calc(88px + env(safe-area-inset-bottom, 0px)) !important; }
+  .dashboard-layout { padding-bottom: 0 !important; }
+  .dashboard-main { padding-bottom: 28px; }
+  #overview, #about { scroll-margin-top: 24px; }
+}
+
+@media (max-width: 360px) {
+  .mobile-bottom-nav { padding-left: 7px !important; padding-right: 7px !important; }
+  .mobile-bottom-nav__inner { min-height: 59px; border-radius: 23px; }
+  .mobile-bottom-nav__item { min-height: 49px !important; gap: 2px !important; }
+  .mobile-bottom-nav__label { font-size: 8px !important; }
+  .mobile-bottom-nav__icon svg { width: 20px !important; height: 20px !important; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .desktop-nav-drawer,
+  .desktop-nav-brand-name,
+  .desktop-nav-item,
+  .desktop-nav-item-label,
+  .mobile-bottom-nav__indicator,
+  .mobile-bottom-nav__item,
+  .app-shell { transition-duration: .01ms !important; }
 }
