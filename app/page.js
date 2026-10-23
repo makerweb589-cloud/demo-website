@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import BrandLogo from "../components/BrandLogo";
+import { readApiResponse } from "../lib/read-api-response";
 
 function OutlineIcon({ name, size = 20, className = "" }) {
   const common = {
@@ -86,7 +88,7 @@ export default function HomePage() {
         body: JSON.stringify(form)
       });
 
-      const data = await response.json();
+      const data = await readApiResponse(response, "The demo request could not be processed. Please try again.");
 
       if (!response.ok || !data.success) {
         throw new Error(data.message || "Something went wrong.");
@@ -118,7 +120,7 @@ export default function HomePage() {
       <header className="site-header">
         <div className="container nav">
           <Link href="/" className="brand">
-            <span className="brand-icon">N</span>
+            <BrandLogo className="brand-icon" />
             nexa<span className="brand-dot">.</span>
           </Link>
 
@@ -435,7 +437,7 @@ export default function HomePage() {
           <div className="footer-main">
             <div>
               <Link href="/" className="brand footer-brand">
-                <span className="brand-icon">N</span>
+                <BrandLogo className="brand-icon" />
                 nexa<span className="brand-dot">.</span>
               </Link>
 
